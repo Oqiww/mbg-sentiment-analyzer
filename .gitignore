@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Scratch & extracted notebook files in root
+*.ipynb
+*.txt
+model_mbg.safetensors
+config_mbg.json
+slang_dict_mbg.json
+tokenizer_config_mbg.json
+tokenizer_mbg.json
+
+# Environment
+.env
+venv/
+.venv/
