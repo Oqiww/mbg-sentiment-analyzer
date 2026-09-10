@@ -3,14 +3,31 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Scratch & extracted notebook files in root
+# Temporary extracted files
+/artifact_export.txt
+/best_model.txt
+/cells16.txt
+/ckptpath.txt
+/emoji_map.txt
+/extract_nb.txt
+/keywords.txt
+/model_save.txt
+/predict_fn.txt
+/section13.txt
+/tokenizer_save.txt
+
+# Notebook
 *.ipynb
-*.txt
-model_mbg.safetensors
-config_mbg.json
-slang_dict_mbg.json
-tokenizer_config_mbg.json
-tokenizer_mbg.json
+
+# Redundant files in root
+/model_mbg.safetensors
+/config_mbg.json
+/slang_dict_mbg.json
+/tokenizer_config_mbg.json
+/tokenizer_mbg.json
+
+# Never ignore requirements.txt
+!requirements.txt
 
 # Environment
 .env
