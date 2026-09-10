@@ -645,7 +645,7 @@ def render_sidebar(active_page: str):
         )
         st.markdown(sidebar_header, unsafe_allow_html=True)
 
-        pages = ["Analyzer", "Cara Kerja", "Batch Analysis"]
+        pages = ["Analyzer", "Cara Kerja", "CSV Analysis"]
         for label in pages:
             btn_type = "primary" if label == active_page else "secondary"
             if st.button(label, key=f"nav_{label}", use_container_width=True, type=btn_type):
@@ -977,7 +977,7 @@ def page_batch_analysis(model, tokenizer, slang_dict, device):
 
     st.markdown("<br>", unsafe_allow_html=True)
     with st.container(border=True):
-        st.markdown('<div class="section-title">Batch Analysis &mdash; Upload CSV</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">CSV Analysis &mdash; Upload File</div>', unsafe_allow_html=True)
         st.markdown("""
         <p style="font-size:0.88rem;color:#cbd5e1;line-height:1.65;margin-bottom:1rem;">
             Upload file CSV dengan kolom <code>comment</code> untuk menganalisis banyak komentar sekaligus.
@@ -1106,7 +1106,7 @@ def main():
         page_analyzer(model, tokenizer, slang_dict, device)
     elif page == "Cara Kerja":
         page_cara_kerja()
-    elif page == "Batch Analysis":
+    elif page == "CSV Analysis":
         page_batch_analysis(model, tokenizer, slang_dict, device)
 
 
