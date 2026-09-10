@@ -349,7 +349,7 @@ def inject_css():
         box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5) !important;
     }
 
-    /* Secondary Button (Bersihkan) */
+    /* Secondary Button (Hapus Semua) */
     .stButton > button[kind="secondary"], 
     .stButton > button[data-testid="stBaseButton-secondary"] {
         background-color: #1e293b !important;
@@ -905,7 +905,7 @@ def page_analyzer(model, tokenizer, slang_dict, device):
         with col1:
             analyze_btn = st.button("Analisis Sentimen", key="analyze_btn", use_container_width=True, type="primary")
         with col2:
-            st.button("Bersihkan", key="clear_btn", use_container_width=True, on_click=clear_text_input, type="secondary")
+            st.button("Hapus Semua", key="clear_btn", use_container_width=True, on_click=clear_text_input, type="secondary")
 
     # Real-time character counter script that continuously synchronizes counter with textarea.value
     components.html("""
