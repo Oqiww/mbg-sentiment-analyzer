@@ -96,12 +96,87 @@ def inject_css():
         color: #f1f5f9 !important;
     }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer { visibility: hidden; }
+
+    /* Header & Sidebar Re-open Control */
+    header[data-testid="stHeader"] { 
+        background: transparent !important;
+        height: 3.5rem !important;
+        z-index: 99 !important;
+    }
     
+    [data-testid="stSidebarCollapsedControl"] {
+        visibility: visible !important;
+        display: flex !important;
+        color: #cbd5e1 !important;
+        background: #131b2e !important;
+        border: 1px solid #24324d !important;
+        border-radius: 8px !important;
+        margin-left: 0.75rem !important;
+        margin-top: 0.5rem !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    }
+    [data-testid="stSidebarCollapsedControl"]:hover {
+        color: #ffffff !important;
+        border-color: #3b82f6 !important;
+        background: #1e3a5f !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] button {
+        color: inherit !important;
+    }
+
     .block-container { 
-        padding-top: 1.8rem !important; 
+        padding-top: 1.5rem !important; 
         padding-bottom: 3rem !important; 
         max-width: 920px !important; 
+    }
+
+    /* Top Navigasi Capsule (like reference design) */
+    .nav-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
+    div[data-testid="stRadio"] > div[role="radiogroup"] {
+        display: inline-flex !important;
+        flex-wrap: wrap !important;
+        background: #131b2e !important;
+        border: 1px solid #24324d !important;
+        border-radius: 100px !important;
+        padding: 5px 8px !important;
+        gap: 6px !important;
+        margin-bottom: 1.5rem !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+    div[data-testid="stRadio"] label[data-baseweb="radio"] {
+        background: transparent !important;
+        padding: 6px 16px !important;
+        border-radius: 100px !important;
+        margin: 0 !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+    }
+    div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) {
+        background: #1e3a5f !important;
+        border: 1px solid #3b82f6 !important;
+    }
+    div[data-testid="stRadio"] label[data-baseweb="radio"] p {
+        font-size: 0.85rem !important;
+        font-weight: 600 !important;
+        color: #94a3b8 !important;
+    }
+    div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p {
+        color: #ffffff !important;
+        font-weight: 700 !important;
     }
 
     /* Container Card Wrapper */
@@ -606,6 +681,24 @@ def load_resources():
     return model, tokenizer, slang_dict, device
 
 
+def render_top_navigation():
+    """Render horizontal pill navigation at the top like reference design."""
+    st.markdown('<div class="nav-label">Navigasi</div>', unsafe_allow_html=True)
+    pages = ["Analyzer", "Cara Kerja", "Batch Analysis"]
+    current_idx = pages.index(st.session_state.page) if st.session_state.page in pages else 0
+    selected = st.radio(
+        label="Navigasi Halaman",
+        options=pages,
+        index=current_idx,
+        horizontal=True,
+        label_visibility="collapsed",
+        key="top_nav_radio",
+    )
+    if selected != st.session_state.page:
+        st.session_state.page = selected
+        st.rerun()
+
+
 def render_sidebar(active_page: str):
     with st.sidebar:
         sidebar_header = (
@@ -795,7 +888,6 @@ def page_analyzer(model, tokenizer, slang_dict, device):
 
         input_text = st.text_area(
             label="Komentar MBG",
-            value=st.session_state.get("text_input_area", ""),
             placeholder="Tulis komentar di sini... (atau pilih salah satu contoh di atas)",
             height=130,
             max_chars=MAX_INPUT_CHARS,
@@ -815,26 +907,33 @@ def page_analyzer(model, tokenizer, slang_dict, device):
         with col2:
             st.button("Bersihkan", key="clear_btn", use_container_width=True, on_click=clear_text_input, type="secondary")
 
-    # Real-time character counter script
+    # Real-time character counter script that continuously synchronizes counter with textarea.value
     components.html("""
     <script>
     (function() {
-        function setupLiveCounter() {
+        function syncLiveCounter() {
             try {
                 const doc = window.parent.document;
                 const textarea = doc.querySelector('textarea');
                 const counter = doc.getElementById('live-char-count');
-                if (textarea && counter && !textarea.dataset.hasLiveCounter) {
-                    textarea.dataset.hasLiveCounter = "true";
-                    textarea.addEventListener('input', function(e) {
-                        const c = doc.getElementById('live-char-count');
-                        if (c) c.textContent = e.target.value.length;
-                    });
+                if (textarea && counter) {
+                    const currentLen = textarea.value.length;
+                    if (counter.textContent !== String(currentLen)) {
+                        counter.textContent = currentLen;
+                    }
+                    if (!textarea.dataset.hasLiveCounter) {
+                        textarea.dataset.hasLiveCounter = "true";
+                        ['input', 'keyup', 'paste', 'change'].forEach(evt => {
+                            textarea.addEventListener(evt, () => {
+                                counter.textContent = textarea.value.length;
+                            });
+                        });
+                    }
                 }
             } catch(e) {}
         }
-        setupLiveCounter();
-        setInterval(setupLiveCounter, 300);
+        syncLiveCounter();
+        setInterval(syncLiveCounter, 100);
     })();
     </script>
     """, height=0, width=0)
@@ -1066,6 +1165,9 @@ def main():
         st.stop()
 
     render_sidebar(st.session_state.page)
+
+    # Top horizontal navigation (per-page capsule like reference image)
+    render_top_navigation()
 
     page = st.session_state.page
     if page == "Analyzer":
