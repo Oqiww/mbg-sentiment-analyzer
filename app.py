@@ -127,56 +127,9 @@ def inject_css():
     }
 
     .block-container { 
-        padding-top: 1.5rem !important; 
+        padding-top: 1.8rem !important; 
         padding-bottom: 3rem !important; 
         max-width: 920px !important; 
-    }
-
-    /* Top Navigasi Capsule (like reference design) */
-    .nav-label {
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: #94a3b8;
-        margin-bottom: 8px;
-    }
-    div[data-testid="stRadio"] > div[role="radiogroup"] {
-        display: inline-flex !important;
-        flex-wrap: wrap !important;
-        background: #131b2e !important;
-        border: 1px solid #24324d !important;
-        border-radius: 100px !important;
-        padding: 5px 8px !important;
-        gap: 6px !important;
-        margin-bottom: 1.5rem !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
-    }
-    div[data-testid="stRadio"] label[data-baseweb="radio"] {
-        background: transparent !important;
-        padding: 6px 16px !important;
-        border-radius: 100px !important;
-        margin: 0 !important;
-        transition: all 0.2s ease !important;
-        cursor: pointer !important;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-    div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
-        background: rgba(255, 255, 255, 0.06) !important;
-    }
-    div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) {
-        background: #1e3a5f !important;
-        border: 1px solid #3b82f6 !important;
-    }
-    div[data-testid="stRadio"] label[data-baseweb="radio"] p {
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        color: #94a3b8 !important;
-    }
-    div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p {
-        color: #ffffff !important;
-        font-weight: 700 !important;
     }
 
     /* Container Card Wrapper */
@@ -681,24 +634,6 @@ def load_resources():
     return model, tokenizer, slang_dict, device
 
 
-def render_top_navigation():
-    """Render horizontal pill navigation at the top like reference design."""
-    st.markdown('<div class="nav-label">Navigasi</div>', unsafe_allow_html=True)
-    pages = ["Analyzer", "Cara Kerja", "Batch Analysis"]
-    current_idx = pages.index(st.session_state.page) if st.session_state.page in pages else 0
-    selected = st.radio(
-        label="Navigasi Halaman",
-        options=pages,
-        index=current_idx,
-        horizontal=True,
-        label_visibility="collapsed",
-        key="top_nav_radio",
-    )
-    if selected != st.session_state.page:
-        st.session_state.page = selected
-        st.rerun()
-
-
 def render_sidebar(active_page: str):
     with st.sidebar:
         sidebar_header = (
@@ -1165,9 +1100,6 @@ def main():
         st.stop()
 
     render_sidebar(st.session_state.page)
-
-    # Top horizontal navigation (per-page capsule like reference image)
-    render_top_navigation()
 
     page = st.session_state.page
     if page == "Analyzer":
