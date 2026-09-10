@@ -76,6 +76,7 @@ SAMPLE_COMMENTS = [
 
 st.set_page_config(
     page_title="MBG Sentiment Analyzer",
+    page_icon="🍱",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={"About": "MBG Sentiment Analyzer — Analisis sentimen komentar masyarakat terhadap program Makan Bergizi Gratis."},
